@@ -2,7 +2,7 @@ pages:
   image: node:16
   script:
     - npm ci
-    - npm run build
+    - npm run build -- --base=/polyrhythm-generator/
     - rm -rf public
     - mv dist public
   artifacts:
