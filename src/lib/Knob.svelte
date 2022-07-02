@@ -12,15 +12,15 @@
   export let value = 0;
   export let min = 0;
   export let max = 100;
-  export let deadzone = 0;
+  export let deadzone = 90;
 
   let knobHandler;
   let initialCursorAngle = 0;
   let initialValueAngle = 0;
   let active = false;
 
-  $: startAngle = 90 + (deadzone / 2);
-  $: endAngle = 450 - (deadzone / 2);
+  $: startAngle = (deadzone / 2);
+  $: endAngle = 360 - (deadzone / 2);
   $: angleMultiplier = (360 - deadzone) / (max - min);
   $: rotation = `${getAngle(value)}deg`;
   $: xPos = `${getXPos(getAngle(value))}%`
@@ -29,13 +29,12 @@
 
   // calculate x position in percentage (-50% to 50%) from angle
   function getXPos(angle: number) {
-    console.log(angle)
-    return (50 * Math.sin((angle) * Math.PI / 180)) + 50;
+    return (50 * Math.cos((angle) * Math.PI / 180)) + 50;
   }
 
   // calculate y position in percentage (-50% to 50%) from angle
   function getYPos(angle: number) {
-    return (50 * Math.cos((angle) * Math.PI / 180)) + 50;
+    return (-50 * Math.sin((angle) * Math.PI / 180)) + 50;
   }
 
   // get rotation from event cursor position relative to element
@@ -44,27 +43,29 @@
     const { left, top, width, height } = element.getBoundingClientRect();
     const x = clientX - (left + width / 2);
     const y = clientY - (top + height / 2);
-    const angle = Math.atan2(y, x) * 180 / Math.PI;
+    const angle = Math.atan2(y, x) * 180 / Math.PI - 90;
 
-    return angle;
+    // console.log(angle)
+
+    return limitAngle(angle);
   }
 
   // convert angle to value
   function getValue(angle: number) {
     // convert angle to value
-    const value = ((angle - 90) / angleMultiplier) + min;
+    const value = ((angle - startAngle) / angleMultiplier) + min;
 
     return Math.max(min, Math.min(max, value));
   }
 
   // convert value to angle
   function getAngle(value: number) {
-    return limitAngle(value * angleMultiplier);
+    return limitAngle((value - min) * angleMultiplier) + startAngle;
   }
 
   // clamp angle from 90 to 450
   function limitAngle(angle: number) {
-    return ((angle + 270) % 360) + 90;
+    return ((angle + 360) % 360);
   }
   
   function startDrag(event: MouseEvent | TouchEvent) {
@@ -81,12 +82,16 @@
 
   function drag(event: MouseEvent | TouchEvent) {
 
+    // console.log(getAngle(40))
+
     event.preventDefault();
     // value = Math.max(0, Math.min(1, (event.clientX - event.target.offsetLeft) /
     //                              event.target.offsetWidth));
     const angle = limitAngle(getRotation(event, knobHandler as HTMLElement));
     const angleChange = angle - initialCursorAngle;
+
     const newAngle = limitAngle(initialValueAngle + angleChange);
+    console.log(angle, newAngle, angleChange, initialValueAngle);
 
     const value = getValue(newAngle);
 
