@@ -186,6 +186,19 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
+
+    &::after {
+      @include shadow(16px, true);
+      --rim: 2px;
+      content: "";
+      position: absolute;
+      top: var(--rim);
+      left: var(--rim);
+      width: calc(100% - var(--rim) * 2);
+      height: calc(100% - var(--rim) * 2);
+      border-radius: 50%;
+      opacity: 0.5;
+    }
   }
   
   .knob-inner {
@@ -193,8 +206,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     overflow: none;
     /* transition: transform 0.2s ease-in-out; */
