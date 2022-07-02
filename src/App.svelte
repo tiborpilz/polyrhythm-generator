@@ -92,7 +92,7 @@
 
 <style lang="scss">
  @import "src/styles/mixins.scss";
- @import "src/styles/styles.scss";
+ @import "src/styles/variables.scss";
 
  main {
    text-align: center;
@@ -118,6 +118,6 @@
    text-transform: uppercase;
    font-family: sans-serif;
    font-weight: 800;
-   color: var(--bg-color);
+   color: $bg-color;
  }
 </style>
