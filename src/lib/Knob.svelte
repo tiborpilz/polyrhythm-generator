@@ -25,6 +25,7 @@
   $: rotation = `${getAngle(value)}deg`;
   $: xPos = `${getXPos(getAngle(value))}%`
   $: yPos = `${getYPos(getAngle(value))}%`
+  $: indicatorValue = (value - min) / (max - min);
 
   // calculate x position in percentage (-50% to 50%) from angle
   function getXPos(angle: number) {
@@ -110,7 +111,9 @@
 <div class="knob-wrapper">
   <div class="knob" on:mousedown={startDrag} on:touchstart={startDrag} bind:this={knobHandler}>
     <div class="knob-inner" use:styles={{ rotation, xPos, yPos }}>
-      <div class="knob-indicator"><Indicator active={active} /></div>
+      <div class="knob-indicator">
+        <Indicator useValue={true} value={indicatorValue} />
+      </div>
     </div>
   </div>
 </div>
