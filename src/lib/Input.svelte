@@ -19,7 +19,7 @@
     @import "src/styles/mixins.scss";
 
     input {
-        @include shadow(8px);
+        @include shadow(2px, true);
 
         padding: 10px;
         margin: 20px;
@@ -35,7 +35,7 @@
         }
 
         &:focus {
-            @include shadow(16px);
+            @include shadow(4px, true);
         }
     }
 </style>

@@ -1,20 +1,21 @@
-@mixin shadow($size: 12px, $inset: false) {
+@function generateshadow($size, $color1, $color2, $inset: false) {
+    $val: '';
+    $prefix: if($inset, 'inset', '');
+    $repeats: if($inset, 1, 4);
+
+    @for $i from 1 through $repeats {
+        $val: #{$val},
+            #{$prefix} ($size * $i) ($size * $i) ($size * $i * 2) $color1,
+            #{$prefix} ($size * -1 * $i) ($size * -1 * $i) ($size * $i * 2) $color2;
+    }
+    @return $val;
+}
+
+@mixin shadow($size: 12px, $inset: false, $prop: 'box-shadow') {
     $color1: rgba(108, 141, 154, 0.5);
     $color2: rgba(255, 255, 255, 0.8);
 
     transition: box-shadow 0.2s;
 
-    @if $inset {
-        box-shadow: 0 0 0 0 $color1,
-                    0 0 0 0 $color2,
-                    inset $size $size $size * 2 0 $color1,
-                    inset -1 * $size -1 * $size $size * 2 0 $color2;
-    }
-
-    @else {
-        box-shadow: $size $size $size * 2 0 $color1,
-                    -1 * $size -1 * $size $size * 2 0 $color2,
-                    inset 0 0 0 0 $color1,
-                    inset 0 0 0 0 $color2;
-    }
+    #{$prop}: generateshadow($size, $color1, $color2, $inset);
 }

@@ -88,10 +88,23 @@
   <IndicatorRow count={lcm} activeIndex={step} />
 </main>
 
-<style>
+<style lang="scss">
+ @import "src/styles/mixins.scss";
+ @import "src/styles/styles.scss";
+
  main {
    text-align: center;
    padding: 1em;
    margin: 0 auto;
+   max-width: min(1280px, 80vw);
+ }
+
+ h1 {
+   @include shadow(2px, false, 'text-shadow');
+   font-size: 72px;
+   text-transform: uppercase;
+   font-family: sans-serif;
+   font-weight: 800;
+   color: var(--bg-color);
  }
 </style>

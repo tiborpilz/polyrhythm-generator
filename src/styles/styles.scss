@@ -2,4 +2,5 @@ $bg-color: #DFEAEA;
 
 body {
     background-color: $bg-color;
+    --bg-color: #{$bg-color};
 }
