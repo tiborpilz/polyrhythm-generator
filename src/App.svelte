@@ -2,11 +2,19 @@
  import Input from './lib/Input.svelte'
  import IndicatorRow from './lib/IndicatorRow.svelte'
  import ToggleButton from './lib/ToggleButton.svelte'
+ import * as Tone from 'tone';
 
  let valueA = 4;
  let valueB = 3;
  let bpm = 120;
  let run = false;
+
+ let step = -1;
+ let activeA = -1;
+ let activeB = -1;
+
+ const synthA = new Tone.Synth().toDestination();
+ const synthB = new Tone.Synth().toDestination();
 
  const getLcm = (a, b) => {
    let max = Math.max(a, b);
@@ -21,13 +29,23 @@
 
  $: lcm = getLcm(valueA, valueB);
  $: timeout = (60000 / bpm) * (4/lcm);
-
- let step = -1;
+ $: indicatorsA = [...Array(valueA)].map((_, index) => (lcm / valueA) * index);
+ $: indicatorsB = [...Array(valueB)].map((_, index) => (lcm / valueB) * index);
 
  function stepForward() {
    if (run) {
      step = (step + 1) % lcm || 0;
-     setTimeout(() => stepForward(), timeout)
+     setTimeout(() => stepForward(), timeout);
+     activeA = indicatorsA.indexOf(step);
+     activeB = indicatorsB.indexOf(step);
+
+     if (activeA !== -1) {
+       synthA.triggerAttackRelease('C3', '16n');
+     }
+
+     if (activeB !== -1) {
+       synthB.triggerAttackRelease('G3', '16n');
+     }
    }
  }
 
@@ -65,9 +83,9 @@
 
   <ToggleButton active={run} on:change={handleRunChange} label="Run" />
 
-  <IndicatorRow count={valueA} stepCount={lcm} step={step} />
-  <IndicatorRow count={valueB} stepCount={lcm} step={step} />
-  <IndicatorRow count={lcm} stepCount={lcm} step={step} />
+  <IndicatorRow count={valueA} activeIndex={activeA} />
+  <IndicatorRow count={valueB} activeIndex={activeB} />
+  <IndicatorRow count={lcm} activeIndex={step} />
 </main>
 
 <style>

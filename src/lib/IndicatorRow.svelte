@@ -2,16 +2,15 @@
     import Indicator from './Indicator.svelte';
 
     export let count: number;
-    export let stepCount: number;
-    export let step: number;
+    export let activeIndex: number;
 
-    $: indicators = [...Array(count)].map((_, index) => (stepCount / count) * index);
+    $: indicators = [...Array(count)].map((_, index) => index === activeIndex);
 </script>
 
 <div class="indicator-row">
     {#each indicators as indicator}
         <div class="indicator-wrapper">
-            <Indicator active={indicator === step} />
+            <Indicator active={indicator} />
         </div>
     {/each}
 </div>

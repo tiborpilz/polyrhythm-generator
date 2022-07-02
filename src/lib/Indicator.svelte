@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let active;
+    export let active: boolean;
 </script>
 
 <div class="{ active ? 'indicator indicator--active' : 'indicator' }"></div>
