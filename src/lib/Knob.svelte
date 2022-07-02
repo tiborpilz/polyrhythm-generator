@@ -13,6 +13,8 @@
   export let min = 0;
   export let max = 100;
   export let deadzone = 90;
+  export let stepcount;
+  export let snap = true;
 
   let knobHandler;
   let initialCursorAngle = 0;
@@ -26,6 +28,29 @@
   $: xPos = `${getXPos(getAngle(value))}%`
   $: yPos = `${getYPos(getAngle(value))}%`
   $: indicatorValue = (value - min) / (max - min);
+  $: steps = getSteps(value, min, max, stepcount);
+
+  function getSteps(value, min, max, stepcount) {
+    if (!stepcount) {
+      return [];
+    }
+
+    const step = (max - min) / (stepcount - 1);
+
+    const length = 1 + (max - min) / step;
+
+    return Array.from({ length }, (_, i) => {
+      const stepValue = min + i * step;
+      const angle = getAngle(stepValue);
+      return {
+        active: value >= stepValue,
+        xPos: `${getXPos(angle)}%`,
+        yPos: `${getYPos(angle)}%`,
+        angle,
+        stepValue,
+      }
+    });
+  }
 
   // calculate x position in percentage (-50% to 50%) from angle
   function getXPos(angle: number) {
@@ -82,22 +107,30 @@
 
   function drag(event: MouseEvent | TouchEvent) {
 
-    // console.log(getAngle(40))
-
-    event.preventDefault();
+      event.preventDefault();
     // value = Math.max(0, Math.min(1, (event.clientX - event.target.offsetLeft) /
     //                              event.target.offsetWidth));
     const angle = limitAngle(getRotation(event, knobHandler as HTMLElement));
     const angleChange = angle - initialCursorAngle;
 
     const newAngle = limitAngle(initialValueAngle + angleChange);
-    console.log(angle, newAngle, angleChange, initialValueAngle);
 
     const value = getValue(newAngle);
 
     // value = initialValue + valueChange;
 
-    dispatch("change", { value });
+    if (snap) {
+      const snapValues = steps.map(({ stepValue }) => stepValue);
+      const closest = snapValues.reduce((prev, curr) =>
+        Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev);
+      // const resolution = (max - min) / (stepcount - 1); console.log(resolution);
+      // const snappedValue = Math.round(value / resolution) * resolution;
+      dispatch("change", { value: closest });
+    }
+
+    else {
+      dispatch("change", { value });
+    }
     // const value = getValue(angle);
     // dispatch("change", { value });
   }
@@ -110,6 +143,10 @@
     active = false;
     dispatch("stop", { value });
   }
+
+  function setValue(value) {
+    dispatch("change", { value });
+  }
   
 </script>
 
@@ -121,6 +158,11 @@
       </div>
     </div>
   </div>
+  {#each steps as { stepValue, active, xPos, yPos }, i}
+    <div on:click={setValue(stepValue)} class="step-indicator" use:styles={{ xPos, yPos }}>
+      <Indicator active={active} smaller={true} />
+    </div>
+  {/each}
 </div>
 
 <style lang="scss">
@@ -128,8 +170,8 @@
 
   .knob-wrapper {
     position: relative;
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     cursor: pointer;
   }
@@ -159,6 +201,13 @@
   }
 
   .knob-indicator {
+    position: absolute;
+    top: var(--xPos);
+    left: var(--yPos);
+    transform: translate(-50%, -50%);
+  }
+
+  .step-indicator {
     position: absolute;
     top: var(--xPos);
     left: var(--yPos);

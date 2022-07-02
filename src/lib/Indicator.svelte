@@ -45,7 +45,7 @@
     }
 
     &::before {
-      background-image: radial-gradient(lighten($accent-color, 0%), darken($accent-color, 20%));
+      background-image: radial-gradient(lighten($accent-color, 80%), darken($accent-color, 20%));
       /* transition: all 0.3s ease-out; */
 
       opacity: var(--lightOpacity);

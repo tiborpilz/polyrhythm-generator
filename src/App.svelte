@@ -96,7 +96,7 @@
   <IndicatorRow count={valueB} activeIndex={activeB} />
   <IndicatorRow count={totalSteps} activeIndex={step} smaller={true} />
 
-  <Knob value={bpm} min={40} max={200} on:change={(event) => bpm = event.detail.value} />
+  <Knob value={bpm} min={40} max={200} stepcount={8} snap={true} on:change={(event) => bpm = event.detail.value} />
 </main>
 
 <style lang="scss">
