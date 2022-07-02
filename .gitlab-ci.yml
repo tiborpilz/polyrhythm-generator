@@ -3,7 +3,8 @@ pages:
   script:
     - npm ci
     - npm run build
-    - mv dist pages
+    - rm -rf public
+    - mv dist public
   artifacts:
     paths:
     - public
