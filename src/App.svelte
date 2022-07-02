@@ -1,65 +1,61 @@
 <script lang="ts">
-  import logo from './assets/svelte.png'
-  import Counter from './lib/Counter.svelte'
+ import Input from './lib/Input.svelte'
+ import IndicatorRow from './lib/IndicatorRow.svelte'
+
+ let valueA = 4;
+ let valueB = 3;
+ let bpm = 120;
+
+ const getLcm = (a, b) => {
+   let max = Math.max(a, b);
+   let min = Math.min(a, b);
+
+   let lcm = max;
+   while(lcm % min !== 0) {
+     lcm += max;
+   }
+   return lcm;
+ };
+
+ $: lcm = getLcm(valueA, valueB);
+ $: timeout = (60000 / bpm) * (4/lcm);
+
+ let step = -1;
+
+ function stepForward() {
+   step = (step + 1) % lcm || 0;
+   setTimeout(() => stepForward(), timeout)
+ }
+
+ stepForward();
+
+ function handleValueA(event) {
+   valueA = event.detail.value;
+ }
+
+ function handleValueB(event) {
+   valueB = event.detail.value;
+ }
 </script>
 
 <main>
-  <img src={logo} alt="Svelte Logo" />
-  <h1>Hello Typescript!</h1>
+  <h1>Polyrhythms</h1>
 
-  <Counter />
+  <div class="inputs">
+    <Input value={valueA} on:input={handleValueA}></Input>
+    <Input value={valueB} on:input={handleValueB}></Input>
+    <Input value={bpm} on:input={(event) => bpm = event.detail.value}></Input>
+  </div>
 
-  <p>
-    Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte
-    apps.
-  </p>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme">SvelteKit</a> for
-    the officially supported framework, also powered by Vite!
-  </p>
+  <IndicatorRow count={valueA} stepCount={lcm} step={step} />
+  <IndicatorRow count={valueB} stepCount={lcm} step={step} />
+  <IndicatorRow count={lcm} stepCount={lcm} step={step} />
 </main>
 
 <style>
-  :root {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
-
-  main {
-    text-align: center;
-    padding: 1em;
-    margin: 0 auto;
-  }
-
-  img {
-    height: 16rem;
-    width: 16rem;
-  }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4rem;
-    font-weight: 100;
-    line-height: 1.1;
-    margin: 2rem auto;
-    max-width: 14rem;
-  }
-
-  p {
-    max-width: 14rem;
-    margin: 1rem auto;
-    line-height: 1.35;
-  }
-
-  @media (min-width: 480px) {
-    h1 {
-      max-width: none;
-    }
-
-    p {
-      max-width: none;
-    }
-  }
+ main {
+   text-align: center;
+   padding: 1em;
+   margin: 0 auto;
+ }
 </style>
