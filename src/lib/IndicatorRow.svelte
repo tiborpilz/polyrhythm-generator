@@ -3,6 +3,7 @@
 
     export let count: number;
     export let activeIndex: number;
+    export let smaller: boolean;
 
     $: indicators = [...Array(count)].map((_, index) => index === activeIndex);
 </script>
@@ -10,7 +11,7 @@
 <div class="indicator-row">
     {#each indicators as indicator}
         <div class="indicator-wrapper">
-            <Indicator active={indicator} />
+            <Indicator active={indicator} smaller={smaller} />
         </div>
     {/each}
 </div>
@@ -19,8 +20,8 @@
     .indicator-row {
         display: flex;
         width: 100%;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin: 20px 0;
+        justify-content: center;
     }
 
     .indicator-wrapper {

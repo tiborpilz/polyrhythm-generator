@@ -76,16 +76,18 @@
   <h1>Polyrhythms</h1>
 
   <div class="inputs">
-    <Input value={valueA} min={1} max={8} on:input={handleValueA}></Input>
-    <Input value={valueB} min={1} max={8} on:input={handleValueB}></Input>
-    <Input value={bpm}  min={40} max={200} step={5} on:input={(event) => bpm = event.detail.value}></Input>
+    <Input value={valueA} min={1} max={8} on:input={handleValueA} label="Count A"></Input>
+    <Input value={valueB} min={1} max={8} on:input={handleValueB} label="Count B"></Input>
+    <Input value={bpm} min={40} max={200} step={5} on:input={(event) => bpm = event.detail.value} label="BPM"></Input>
   </div>
 
-  <ToggleButton active={run} on:change={handleRunChange} label="Run" />
+  <div class="buttons">
+    <ToggleButton active={run} on:change={handleRunChange} label="Run" />
+  </div>
 
   <IndicatorRow count={valueA} activeIndex={activeA} />
   <IndicatorRow count={valueB} activeIndex={activeB} />
-  <IndicatorRow count={lcm} activeIndex={step} />
+  <IndicatorRow count={lcm} activeIndex={step} smaller={true} />
 </main>
 
 <style lang="scss">
@@ -97,6 +99,17 @@
    padding: 1em;
    margin: 0 auto;
    max-width: min(1280px, 80vw);
+ }
+
+ .inputs {
+   display: flex;
+   justify-content: space-between;
+ }
+
+ .buttons {
+   display: flex;
+   margin: 30px 0;
+   justify-content: center;
  }
 
  h1 {

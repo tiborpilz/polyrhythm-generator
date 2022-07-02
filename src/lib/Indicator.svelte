@@ -1,8 +1,9 @@
 <script lang="ts">
     export let active: boolean;
+    export let smaller: boolean;
 </script>
 
-<div class="{ active ? 'indicator indicator--active' : 'indicator' }"></div>
+<div class="indicator" class:active={active} class:smaller={smaller}></div>
 
 <style lang="scss">
 @import "src/styles/mixins.scss";
@@ -13,22 +14,18 @@ $size: 2px;
  .indicator {
      @include shadow(2px);
 
+     --size: 10px;
+
      border-radius: 50%;
      background-image: radial-gradient(#99AABB, darken(#99AABB, 50%));
      position: relative;
-     /* background-image: radial-gradiant(red, green, blue); */
-     /* background-color: #99AABB; */
-     /* box-shadow: 0 0 0 0 #445588,
-        inset 0 0 4px #000,
-        $size $size $size * 2 0 $color1,
-        -1 * $size -1 * $size $size * 2 0 $color2; */
 
-     width: 10px;
-     height: 10px;
+     width: var(--size);
+     height: var(--size);
 
      transition: all 0.1s;
 
-     &--active {
+     &.active {
          background-image: radial-gradient(lighten(#99AABB, 90%), lighten(#99AABB, 50%));
          &::after {
              content: '';
@@ -36,10 +33,16 @@ $size: 2px;
              border-radius: 50%;
              top: 0;
              left: 0;
-             width: 10px;
-             height: 10px;
+             width: var(--size);
+             height: var(--size);
              box-shadow: 0 0 16px 4px #AABBFF;
          }
+     }
+
+     &.smaller {
+         @include shadow(1px);
+         --size: 4px;
+         margin: 3px;
      }
  }
 </style>

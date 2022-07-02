@@ -15,7 +15,8 @@
     class="{active ? 'active' : ''}"
     on:click={dispatchToggle}
 >
-    <span class="inner">{label}</span>
+    <span class="shadow"></span>
+    <span class="label">{label}</span>
 </button>
 
 <style lang="scss">
@@ -25,12 +26,13 @@
         @include shadow(3px);
 
         display: flex;
-        margin: 20px;
+        padding: 10px 40px;
         border-radius: 6px;
         border: none;
         background-color: transparent;
         cursor: pointer;
         position: relative;
+        text-align: center;
 
         &:hover {
             @include shadow(2px);
@@ -39,7 +41,7 @@
         &:active {
             @include shadow(2px);
 
-            .inner {
+            .shadow {
                 @include shadow(6px, true);
             }
         }
@@ -47,18 +49,24 @@
         &.active {
             @include shadow(2px);
 
-            .inner {
+            .shadow {
                 @include shadow(3px, true);
             }
         }
 
-        .inner {
+        .label {
+            width: 100%;
+            text-align: center;
+        }
+
+        .shadow {
             @include shadow(0px, true);
-            padding: 10px;
             border-radius: 6px;
-            margin-top: -3px;
-            margin-left: -3px;
-            margin-right: -3px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
         }
     }
 </style>
