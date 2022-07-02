@@ -1,10 +1,12 @@
 <script lang="ts">
  import Input from './lib/Input.svelte'
  import IndicatorRow from './lib/IndicatorRow.svelte'
+ import ToggleButton from './lib/ToggleButton.svelte'
 
  let valueA = 4;
  let valueB = 3;
  let bpm = 120;
+ let run = false;
 
  const getLcm = (a, b) => {
    let max = Math.max(a, b);
@@ -23,8 +25,10 @@
  let step = -1;
 
  function stepForward() {
-   step = (step + 1) % lcm || 0;
-   setTimeout(() => stepForward(), timeout)
+   if (run) {
+     step = (step + 1) % lcm || 0;
+     setTimeout(() => stepForward(), timeout)
+   }
  }
 
  stepForward();
@@ -36,6 +40,18 @@
  function handleValueB(event) {
    valueB = event.detail.value;
  }
+
+ function handleRunChange(event) {
+   run = event.detail.active;
+
+   if (run) {
+     stepForward();
+   }
+
+   else {
+     step = -1;
+   }
+ }
 </script>
 
 <main>
@@ -46,6 +62,8 @@
     <Input value={valueB} on:input={handleValueB}></Input>
     <Input value={bpm} on:input={(event) => bpm = event.detail.value}></Input>
   </div>
+
+  <ToggleButton active={run} on:change={handleRunChange} label="Run" />
 
   <IndicatorRow count={valueA} stepCount={lcm} step={step} />
   <IndicatorRow count={valueB} stepCount={lcm} step={step} />
