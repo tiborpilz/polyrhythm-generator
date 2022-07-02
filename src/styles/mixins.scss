@@ -1,3 +1,5 @@
+@import "variables.scss";
+
 @function generateshadow($size, $color1, $color2, $inset: false) {
     $val: '';
     $prefix: if($inset, 'inset', '');
@@ -18,4 +20,19 @@
     transition: box-shadow 0.2s;
 
     #{$prop}: generateshadow($size, $color1, $color2, $inset);
+}
+
+@mixin light($enabled: false) {
+    @if $enabled {
+        background-image: radial-gradient(lighten($accent-color, 50%), lighten($accent-color, 20%));
+    }
+    @else {
+        background-image: radial-gradient(darken(desaturate($accent-color, 80%), 50%), darken($accent-color, 40%));
+    }
+}
+
+@mixin light-glow($enabled: false) {
+    $blur: calc(#{if($enabled, 16px, 0)}); // * var(--shadowSize));
+    $spread: calc(#{if($enabled, 8px, 0)}); // * var(--shadowSize));
+    box-shadow: 0 0 $blur $spread lighten(saturate(rgba($accent-color, 0.8), 100%), 10%);
 }
