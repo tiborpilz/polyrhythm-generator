@@ -1,0 +1,11 @@
+pages:
+  image: node:16
+  script:
+    - npm ci
+    - npm run build
+    - mv dist pages
+  artifacts:
+    paths:
+    - public
+  only:
+  - main
