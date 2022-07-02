@@ -1,0 +1,20 @@
+@mixin shadow($size: 12px, $inset: false) {
+    $color1: rgba(108, 141, 154, 0.5);
+    $color2: rgba(255, 255, 255, 0.8);
+
+    transition: box-shadow 0.2s;
+
+    @if $inset {
+        box-shadow: 0 0 0 0 $color1,
+                    0 0 0 0 $color2,
+                    inset $size $size $size * 2 0 $color1,
+                    inset -1 * $size -1 * $size $size * 2 0 $color2;
+    }
+
+    @else {
+        box-shadow: $size $size $size * 2 0 $color1,
+                    -1 * $size -1 * $size $size * 2 0 $color2,
+                    inset 0 0 0 0 $color1,
+                    inset 0 0 0 0 $color2;
+    }
+}

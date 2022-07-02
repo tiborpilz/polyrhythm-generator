@@ -76,9 +76,9 @@
   <h1>Polyrhythms</h1>
 
   <div class="inputs">
-    <Input value={valueA} on:input={handleValueA}></Input>
-    <Input value={valueB} on:input={handleValueB}></Input>
-    <Input value={bpm} on:input={(event) => bpm = event.detail.value}></Input>
+    <Input value={valueA} min={1} max={8} on:input={handleValueA}></Input>
+    <Input value={valueB} min={1} max={8} on:input={handleValueB}></Input>
+    <Input value={bpm}  min={40} max={200} step={5} on:input={(event) => bpm = event.detail.value}></Input>
   </div>
 
   <ToggleButton active={run} on:change={handleRunChange} label="Run" />
