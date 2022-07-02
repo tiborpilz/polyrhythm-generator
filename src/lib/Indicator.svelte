@@ -41,7 +41,7 @@
       left: 0;
       width: var(--size);
       height: var(--size);
-      transition: all 0.4s ease;
+      transition: all 0.75s ease;
     }
 
     &::before {

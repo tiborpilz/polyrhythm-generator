@@ -14,12 +14,14 @@
   export let max = 100;
   export let deadzone = 90;
   export let stepcount;
-  export let snap = true;
+  export let snap = false;
+  export let indicatorValueGlow = false;
 
   let knobHandler;
   let initialCursorAngle = 0;
   let initialValueAngle = 0;
   let active = false;
+  let hover = false;
 
   $: startAngle = (deadzone / 2);
   $: endAngle = 360 - (deadzone / 2);
@@ -27,7 +29,8 @@
   $: rotation = `${getAngle(value)}deg`;
   $: xPos = `${getXPos(getAngle(value))}%`
   $: yPos = `${getYPos(getAngle(value))}%`
-  $: indicatorValue = (value - min) / (max - min);
+  $: normalizedValue = (value - min) / (max - min);
+  $: indicatorValue = hover ? 1.0 : ( indicatorValueGlow ? normalizedValue : 0.0);
   $: steps = getSteps(value, min, max, stepcount);
 
   function getSteps(value, min, max, stepcount) {
@@ -115,7 +118,7 @@
 
     const newAngle = limitAngle(initialValueAngle + angleChange);
 
-    const value = getValue(newAngle);
+    let value = getValue(newAngle);
 
     // value = initialValue + valueChange;
 
@@ -125,12 +128,11 @@
         Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev);
       // const resolution = (max - min) / (stepcount - 1); console.log(resolution);
       // const snappedValue = Math.round(value / resolution) * resolution;
-      dispatch("change", { value: closest });
+      value = closest
+      // dispatch("change", { value: closest });
     }
 
-    else {
-      dispatch("change", { value });
-    }
+    dispatch("change", { value: value.toFixed(2) });
     // const value = getValue(angle);
     // dispatch("change", { value });
   }
@@ -144,6 +146,14 @@
     dispatch("stop", { value });
   }
 
+  function handleMouseover() {
+    hover = true;
+  }
+
+  function handleMouseout() {
+    hover = false;
+  }
+
   function setValue(value) {
     dispatch("change", { value });
   }
@@ -151,7 +161,8 @@
 </script>
 
 <div class="knob-wrapper">
-  <div class="knob" on:mousedown={startDrag} on:touchstart={startDrag} bind:this={knobHandler}>
+  <div class="knob" on:mousedown={startDrag} on:touchstart={startDrag}
+    on:mouseover={handleMouseover} on:mouseout={handleMouseout} bind:this={knobHandler}>
     <div class="knob-inner" use:styles={{ rotation, xPos, yPos }}>
       <div class="knob-indicator">
         <Indicator useValue={true} value={indicatorValue} />
@@ -226,12 +237,5 @@
     left: var(--yPos);
     transform: translate(-50%, -50%);
   }
-  
-  /* .knob:hover { */
-  /*   box-shadow: 0 0 0 2px #ccc; */
-  /* } */
-  
-  /* .knob:active { */
-  /*   box-shadow: 0 0 0 4px #ccc; */
-  /* } */
+
 </style>

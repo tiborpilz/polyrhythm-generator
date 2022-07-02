@@ -3,7 +3,7 @@
 @function generateshadow($size, $color1, $color2, $inset: false) {
     $val: '';
     $prefix: if($inset, 'inset', '');
-    $repeats: if($inset, 1, 4);
+    $repeats: if($inset, 1, 3);
 
     @for $i from 1 through $repeats {
         $val: #{$val},

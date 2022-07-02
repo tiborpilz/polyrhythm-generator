@@ -83,9 +83,23 @@
   <h1>Polyrhythms</h1>
 
   <div class="inputs">
-    <Input value={valueA} min={1} max={8} on:input={handleValueA} label="Count A"></Input>
-    <Input value={valueB} min={1} max={8} on:input={handleValueB} label="Count B"></Input>
-    <Input value={bpm} min={40} max={200} step={5} on:input={(event) => bpm = event.detail.value} label="BPM"></Input>
+    <div class="input-card">
+      <h2 class="input-card__title">Count A</h2>
+      <Knob value={valueA} min={1} max={8} on:change={(event) => valueA =
+      parseInt(event.detail.value, 10) } stepcount={8} snap={true} />
+      <span class="input-card__value">{valueA}</span>
+    </div>
+    <div class="input-card">
+      <h2 class="input-card__title">Count B</h2>
+      <Knob value={valueB} min={1} max={8} on:change={(event) => valueB =
+      parseInt(event.detail.value, 10) } stepcount={8} snap={true} />
+      <span class="input-card__value">{valueB}</span>
+    </div>
+    <div class="input-card">
+      <h2 class="input-card__title">BPM</h2>
+      <Knob value={bpm} min={40} max={200} on:change={(event) => bpm = event.detail.value } stepcount={8} />
+      <span class="input-card__value">{bpm}</span>
+    </div>
   </div>
 
   <div class="buttons">
@@ -95,8 +109,6 @@
   <IndicatorRow count={valueA} activeIndex={activeA} />
   <IndicatorRow count={valueB} activeIndex={activeB} />
   <IndicatorRow count={totalSteps} activeIndex={step} smaller={true} />
-
-  <Knob value={bpm} min={40} max={200} stepcount={8} snap={true} on:change={(event) => bpm = event.detail.value} />
 </main>
 
 <style lang="scss">
@@ -113,6 +125,31 @@
   .inputs {
     display: flex;
     justify-content: space-between;
+  }
+
+  .input-card {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0.5em;
+
+    &__value {
+      @include shadow(4px, true);
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 6px;
+      width: 50%;
+    }
+
+    &__title {
+      @include shadow(1px, false, 'text-shadow');
+      font-size: 32px;
+      text-transform: uppercase;
+      font-family: sans-serif;
+      font-weight: 800;
+      color: $bg-color;
+    }
   }
 
   .buttons {
