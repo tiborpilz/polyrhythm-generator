@@ -5,6 +5,7 @@
    */
   import { createEventDispatcher } from 'svelte';
   import { styles } from '../utils/styles';
+  import Indicator from './Indicator.svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -16,11 +17,25 @@
   let knobHandler;
   let initialCursorAngle = 0;
   let initialValueAngle = 0;
+  let active = false;
 
   $: startAngle = 90 + (deadzone / 2);
   $: endAngle = 450 - (deadzone / 2);
   $: angleMultiplier = (360 - deadzone) / (max - min);
   $: rotation = `${getAngle(value)}deg`;
+  $: xPos = `${getXPos(getAngle(value))}%`
+  $: yPos = `${getYPos(getAngle(value))}%`
+
+  // calculate x position in percentage (-50% to 50%) from angle
+  function getXPos(angle: number) {
+    console.log(angle)
+    return (50 * Math.sin((angle) * Math.PI / 180)) + 50;
+  }
+
+  // calculate y position in percentage (-50% to 50%) from angle
+  function getYPos(angle: number) {
+    return (50 * Math.cos((angle) * Math.PI / 180)) + 50;
+  }
 
   // get rotation from event cursor position relative to element
   function getRotation(event: MouseEvent | TouchEvent, element: HTMLElement) {
@@ -56,6 +71,7 @@
     initialCursorAngle = getRotation(event, knobHandler as HTMLElement);
     initialValueAngle = getAngle(value);
     dispatch("start", { value });
+    active = true;
     document.addEventListener("mousemove", drag);
     document.addEventListener("touchmove", drag);
     document.addEventListener("mouseup", stopDrag);
@@ -73,8 +89,6 @@
 
     const value = getValue(newAngle);
 
-    console.log(angle, getValue(angle), startAngle, endAngle, angleMultiplier);
-
     // value = initialValue + valueChange;
 
     dispatch("change", { value });
@@ -87,6 +101,7 @@
     document.removeEventListener("touchmove", drag);
     document.removeEventListener("mouseup", stopDrag);
     document.removeEventListener("touchend", stopDrag);
+    active = false;
     dispatch("stop", { value });
   }
   
@@ -94,23 +109,26 @@
 
 <div class="knob-wrapper">
   <div class="knob" on:mousedown={startDrag} on:touchstart={startDrag} bind:this={knobHandler}>
-    <div class="knob-inner" use:styles={{ rotation }}>
-      <div class="knob-indicator"></div>
+    <div class="knob-inner" use:styles={{ rotation, xPos, yPos }}>
+      <div class="knob-indicator"><Indicator active={active} /></div>
     </div>
   </div>
 </div>
 
 <style lang="scss">
+  @import "src/styles/mixins.scss";
+
   .knob-wrapper {
     position: relative;
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background: #eee;
     cursor: pointer;
   }
   
   .knob {
+    @include shadow(2px);
+
     position: absolute;
     top: 50%;
     left: 50%;
@@ -118,41 +136,32 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 0 0 1px #ccc;
-    transition: box-shadow 0.2s ease-in-out;
   }
   
   .knob-inner {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotate(var(--rotation));
+    transform: translate(-50%, -50%);
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: #333;
+    overflow: none;
     /* transition: transform 0.2s ease-in-out; */
   }
 
   .knob-indicator {
     position: absolute;
-    top: 50%;
-    left: 100%;
+    top: var(--xPos);
+    left: var(--yPos);
     transform: translate(-50%, -50%);
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 0 0 1px #ccc;
-    transition: box-shadow 0.2s ease-in-out;
   }
   
-  .knob:hover {
-    box-shadow: 0 0 0 2px #ccc;
-  }
+  /* .knob:hover { */
+  /*   box-shadow: 0 0 0 2px #ccc; */
+  /* } */
   
-  .knob:active {
-    box-shadow: 0 0 0 4px #ccc;
-  }
+  /* .knob:active { */
+  /*   box-shadow: 0 0 0 4px #ccc; */
+  /* } */
 </style>
