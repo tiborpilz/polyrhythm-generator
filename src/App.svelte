@@ -155,7 +155,7 @@
     }
 
     &__title {
-      @include shadow(32px, $prop: 'text-shadow');
+      @include shadow(16px, $prop: 'text-shadow');
       font-size: 32px;
       text-transform: uppercase;
       font-family: sans-serif;

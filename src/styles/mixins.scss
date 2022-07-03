@@ -1,7 +1,8 @@
 @import "variables.scss";
 
-$color1: rgba(108, 141, 154, 0.5);
-$color2: rgba(255, 255, 255, 0.8);
+$color1: rgba(108, 141, 154, 0.6);
+// $color1: rgba(desaturate(darken($bg-color, 50%), 5%), 0.6);
+$color2: rgba(255, 253, 250, 0.6);
 @function exponent($base, $exponent) {
   // reset value
   $value: $base;
@@ -18,7 +19,7 @@ $color2: rgba(255, 255, 255, 0.8);
 }
 
 @function shadowrow($size, $highlight: false, $inset: false, $spread) {
-    $blur: $size * 2;
+    $blur: $size;
     $spread: if($spread, $size/4, '');
     $inset: if($inset, 'inset', '');
     $size: if($highlight, $size * -0.5, $size);
@@ -31,7 +32,7 @@ $color2: rgba(255, 255, 255, 0.8);
     $prefix: if($inset, 'inset', '');
     $repeats: $repeats;
 
-    @for $i from 1 through $repeats {
+    @for $i from 0 through $repeats {
         $factor: 1 / exponent(3, $i);
         $val: #{$val}, shadowrow($size * $factor, false, $inset, $spread), shadowrow($size * $factor, true, $inset, $spread);
             // #{$prefix} ($size * $factor) ($size * $factor) ($size * $factor * 2) $color1,

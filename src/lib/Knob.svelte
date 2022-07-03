@@ -188,7 +188,7 @@
   }
   
   .knob {
-    @include shadow(32px);
+    @include shadow(16px);
 
     position: absolute;
     top: 50%;
@@ -199,10 +199,11 @@
     border-radius: 50%;
 
     &::after {
-      @include shadow(32px, true, $repeats: 1);
-      --rim: 2px;
+      @include shadow(8px, true, $repeats: 1);
+      --rim: 0px;
       content: "";
       position: absolute;
+      transform: rotate(180deg);
       top: var(--rim);
       left: var(--rim);
       width: calc(100% - var(--rim) * 2);

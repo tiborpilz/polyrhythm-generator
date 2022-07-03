@@ -21,10 +21,10 @@
   $color2: rgba(255, 255, 255, 0.8);
   $size: 2px;
   .indicator {
-    @include shadow(24px);
+    @include shadow(16px);
     @include light();
 
-    --size: 10px;
+    --size: 12px;
 
     border-radius: 50%;
     position: relative;
@@ -62,8 +62,8 @@
     }
 
     &.smaller {
-      @include shadow(16px);
-      --size: 4px;
+      @include shadow(6px, $repeats: 1);
+      --size: 5px;
       margin: 3px;
     }
   }
