@@ -183,7 +183,7 @@
     }
 
     &__title {
-      @include shadow(16px, $prop: 'text-shadow');
+      @include shadow(8px, $prop: 'text-shadow', $repeats: 2);
       font-size: 32px;
       text-transform: uppercase;
       font-family: sans-serif;
@@ -199,7 +199,7 @@
   }
 
   h1 {
-    @include shadow(64px, $prop: 'text-shadow');
+    @include shadow(32px, $prop: 'text-shadow', $repeats: 4);
     font-size: 72px;
     text-transform: uppercase;
     font-family: sans-serif;

@@ -21,7 +21,7 @@
   $color2: rgba(255, 255, 255, 0.8);
   $size: 2px;
   .indicator {
-    @include shadow(16px);
+    @include shadow(12px);
     @include light();
 
     --size: 12px;
