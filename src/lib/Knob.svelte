@@ -188,7 +188,7 @@
   }
   
   .knob {
-    @include shadow(2px);
+    @include shadow(32px);
 
     position: absolute;
     top: 50%;
@@ -199,7 +199,7 @@
     border-radius: 50%;
 
     &::after {
-      @include shadow(16px, true);
+      @include shadow(32px, true, $repeats: 1);
       --rim: 2px;
       content: "";
       position: absolute;

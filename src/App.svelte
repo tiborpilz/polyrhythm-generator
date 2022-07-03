@@ -39,7 +39,9 @@
   $: indicatorsA = [...Array(valueA)].map((_, index) => (totalSteps / valueA) * index);
   $: indicatorsB = [...Array(valueB)].map((_, index) => (totalSteps / valueB) * index);
 
+  let lastTime = 0
   function stepForward() {
+    console.log('stepping')
     if (run) {
       step = (step + 1) % totalSteps || 0;
       setTimeout(() => stepForward(), timeout);
@@ -53,6 +55,10 @@
       if (activeB !== -1) {
         synthB.triggerAttackRelease('G3', '16n');
       }
+
+      const now = Date.now();
+      console.log(Number(now) - lastTime)
+      lastTime = Number(now)
     }
   }
 
@@ -143,7 +149,7 @@
     }
 
     &__title {
-      @include shadow(1px, false, 'text-shadow');
+      @include shadow(32px, $prop: 'text-shadow');
       font-size: 32px;
       text-transform: uppercase;
       font-family: sans-serif;
@@ -159,7 +165,7 @@
   }
 
   h1 {
-    @include shadow(2px, false, 'text-shadow');
+    @include shadow(64px, $prop: 'text-shadow');
     font-size: 72px;
     text-transform: uppercase;
     font-family: sans-serif;

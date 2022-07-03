@@ -23,7 +23,7 @@
     @import "src/styles/mixins.scss";
 
     button {
-        @include shadow(3px);
+        @include shadow(16px);
 
         display: flex;
         padding: 10px 40px;
@@ -35,22 +35,22 @@
         text-align: center;
 
         &:hover {
-            @include shadow(2px);
-        }
-
-        &:active {
-            @include shadow(2px);
-
-            .shadow {
-                @include shadow(6px, true);
-            }
+            @include shadow(8px);
         }
 
         &.active {
             @include shadow(2px);
 
             .shadow {
-                @include shadow(3px, true);
+                @include shadow(8px, true);
+            }
+        }
+
+        &:active {
+            @include shadow(2px);
+
+            .shadow {
+                @include shadow(16px, true);
             }
         }
 
