@@ -16,6 +16,7 @@
   let activeA = -1;
   let activeB = -1;
 
+
   const synthA = new Tone.Synth().toDestination();
   const synthB = new Tone.Synth().toDestination();
 
@@ -41,49 +42,78 @@
   $: indicatorsA = [...Array(valueA)].map((_, index) => (totalSteps / valueA) * index);
   $: indicatorsB = [...Array(valueB)].map((_, index) => (totalSteps / valueB) * index);
 
-  let lastTime = 0
-  function stepForward() {
-    console.log('stepping')
-    if (run) {
-      step = (step + 1) % totalSteps || 0;
-      setTimeout(() => stepForward(), timeout);
-      activeA = indicatorsA.indexOf(step);
-      activeB = indicatorsB.indexOf(step);
 
-      if (activeA !== -1) {
-        synthA.triggerAttackRelease('C3', '16n');
-      }
+  Tone.Transport.cancel();
 
-      if (activeB !== -1) {
-        synthB.triggerAttackRelease('G3', '16n');
-      }
+  Tone.Transport.bpm.value = bpm;
 
-      const now = Date.now();
-      console.log(Number(now) - lastTime)
-      lastTime = Number(now)
+  const loop = new Tone.Loop((time) => {
+    step = (step + 1) % totalSteps || 0;
+    activeA = indicatorsA.indexOf(step);
+    activeB = indicatorsB.indexOf(step);
+
+    if (activeA !== -1) {
+      synthA.triggerAttackRelease('C3', '16n');
     }
+
+    if (activeB !== -1) {
+      synthB.triggerAttackRelease('G3', '16n');
+    }
+  }, Tone.Time("1m").toSeconds() / lcm(valueA, valueB)).start(0);
+
+ // function stepForward() {
+ //   console.log('stepping')
+ //   if (run) {
+ //     step = (step + 1) % totalSteps || 0;
+ //     setTimeout(() => stepForward(), timeout);
+ //     activeA = indicatorsA.indexOf(step);
+ //     activeB = indicatorsB.indexOf(step);
+ // 
+ //     if (activeA !== -1) {
+ //       synthA.triggerAttackRelease('C3', '16n');
+ //     }
+ // 
+ //     if (activeB !== -1) {
+ //       synthB.triggerAttackRelease('G3', '16n');
+ //     }
+ // 
+ //     const now = Date.now();
+ //     console.log(Number(now) - lastTime)
+ //     lastTime = Number(now)
+ //   }
+ // }
+
+ // stepForward();
+  console.log(Tone.Time("1m").toSeconds())
+  function setLoopInterval() {
+    console.log(totalSteps)
+    loop.interval = Tone.Time("1m").toSeconds() / totalSteps;
   }
 
-  stepForward();
-
   function handleValueA(event) {
-    valueA = event.detail.value;
+    valueA = parseInt(event.detail.value, 10);
+    setLoopInterval()
   }
 
   function handleValueB(event) {
-    valueB = event.detail.value;
+    valueB = parseInt(event.detail.value, 10);
+    setLoopInterval()
   }
 
   function handleRunChange(event) {
-    run = event.detail.active;
-
-    if (run) {
-      stepForward();
+    run = event.detail.active
+    if (event.detail.active) {
+      Tone.Transport.start();
     }
-
     else {
-      step = -1;
+      Tone.Transport.stop();
     }
+  }
+
+  function handleBPMChange(event) {
+    bpm = event.detail.value;
+    Tone.Transport.bpm.value = bpm;
+    // test
   }
 </script>
 
@@ -93,19 +123,17 @@
   <div class="inputs">
     <div class="input-card">
       <h2 class="input-card__title">Count A</h2>
-      <Knob value={valueA} min={1} max={8} on:change={(event) => valueA =
-      parseInt(event.detail.value, 10) } stepcount={8} snap={true} />
+      <Knob value={valueA} min={1} max={8} on:change={handleValueA} stepcount={8} snap={true} />
       <span class="input-card__value">{valueA}</span>
     </div>
     <div class="input-card">
       <h2 class="input-card__title">Count B</h2>
-      <Knob value={valueB} min={1} max={8} on:change={(event) => valueB =
-      parseInt(event.detail.value, 10) } stepcount={8} snap={true} />
+      <Knob value={valueB} min={1} max={8} on:change={handleValueB} stepcount={8} snap={true} />
       <span class="input-card__value">{valueB}</span>
     </div>
     <div class="input-card">
       <h2 class="input-card__title">BPM</h2>
-      <Knob value={bpm} min={40} max={200} on:change={(event) => bpm = event.detail.value } stepcount={8} />
+      <Knob value={bpm} min={40} max={200} on:change={handleBPMChange} stepcount={8} />
       <span class="input-card__value">{bpm}</span>
     </div>
   </div>

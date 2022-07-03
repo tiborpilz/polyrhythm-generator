@@ -35,8 +35,6 @@ $color2: rgba(255, 253, 250, 0.6);
     @for $i from 0 through $repeats {
         $factor: 1 / exponent(3, $i);
         $val: #{$val}, shadowrow($size * $factor, false, $inset, $spread), shadowrow($size * $factor, true, $inset, $spread);
-            // #{$prefix} ($size * $factor) ($size * $factor) ($size * $factor * 2) $color1,
-            // #{$prefix} ($size * -1 * $factor) ($size * -1 * $factor) ($size * $factor * 2) $color2;
     }
     @return $val;
 }
