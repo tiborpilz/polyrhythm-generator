@@ -4,6 +4,8 @@
   import ToggleButton from './lib/ToggleButton.svelte'
   import Knob from './lib/Knob.svelte'
   import * as Tone from 'tone';
+  import Fa from 'svelte-fa/src/fa.svelte'
+  import { faPlay, faPause, faStop } from '@fortawesome/free-solid-svg-icons'
 
   let valueA = 4;
   let valueB = 3;
@@ -109,7 +111,11 @@
   </div>
 
   <div class="buttons">
-    <ToggleButton active={run} on:change={handleRunChange} label="Run" />
+    <ToggleButton active={run} on:change={handleRunChange}
+    label="Run">
+      <Fa color="#666" icon={faPlay} />
+      <Fa color="#666" icon={faStop} slot="active" />
+    </ToggleButton>
   </div>
 
   <IndicatorRow count={valueA} activeIndex={activeA} />

@@ -16,7 +16,16 @@
     on:click={dispatchToggle}
 >
     <span class="shadow"></span>
-    <span class="label">{label}</span>
+    {#if active}
+        <span class="label active">
+            <slot name="active"><slot></slot></slot>
+        </span>
+    {:else}
+        <span class="label">
+            <slot></slot>
+        </span>
+    {/if}
+
 </button>
 
 <style lang="scss">

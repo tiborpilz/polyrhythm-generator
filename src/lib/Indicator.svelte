@@ -21,13 +21,12 @@
   $color2: rgba(255, 255, 255, 0.8);
   $size: 2px;
   .indicator {
-    @include shadow(2px);
+    @include shadow(24px);
     @include light();
 
     --size: 10px;
 
     border-radius: 50%;
-    /* background-image: radial-gradient(#99AABB, darken(#99AABB, 50%)); */
     position: relative;
 
     width: var(--size);
@@ -63,7 +62,7 @@
     }
 
     &.smaller {
-      @include shadow(1px);
+      @include shadow(16px);
       --size: 4px;
       margin: 3px;
     }

@@ -1,5 +1,7 @@
 @import "variables.scss";
 
+$color1: rgba(108, 141, 154, 0.5);
+$color2: rgba(255, 255, 255, 0.8);
 @function exponent($base, $exponent) {
   // reset value
   $value: $base;
@@ -15,27 +17,34 @@
   @return $value;
 }
 
-@function generateshadow($size, $color1, $color2, $inset: false, $repeats) {
+@function shadowrow($size, $highlight: false, $inset: false, $spread) {
+    $blur: $size * 2;
+    $spread: if($spread, $size/4, '');
+    $inset: if($inset, 'inset', '');
+    $size: if($highlight, $size * -0.5, $size);
+    $color: if($highlight, $color2, $color1);
+    @return #{$inset} $size $size $blur #{$spread} $color,
+}
+
+@function generateshadow($size, $color1, $color2, $inset: false, $repeats, $spread) {
     $val: '';
     $prefix: if($inset, 'inset', '');
-    // $repeats: if($inset, 1, $rep);
+    $repeats: $repeats;
 
     @for $i from 1 through $repeats {
         $factor: 1 / exponent(3, $i);
-        $val: #{$val},
-            #{$prefix} ($size * $factor) ($size * $factor) ($size * $factor * 2) $color1,
-            #{$prefix} ($size * -1 * $factor) ($size * -1 * $factor) ($size * $factor * 2) $color2;
+        $val: #{$val}, shadowrow($size * $factor, false, $inset, $spread), shadowrow($size * $factor, true, $inset, $spread);
+            // #{$prefix} ($size * $factor) ($size * $factor) ($size * $factor * 2) $color1,
+            // #{$prefix} ($size * -1 * $factor) ($size * -1 * $factor) ($size * $factor * 2) $color2;
     }
     @return $val;
 }
 
 @mixin shadow($size: 12px, $inset: false, $prop: 'box-shadow', $repeats: 3) {
-    $color1: rgba(108, 141, 154, 0.5);
-    $color2: rgba(255, 255, 255, 0.8);
 
     transition: box-shadow 0.2s;
 
-    #{$prop}: generateshadow($size, $color1, $color2, $inset, $repeats);
+    #{$prop}: generateshadow($size, $color1, $color2, $inset, $repeats, $spread: $prop == 'box-shadow');
 }
 
 @mixin light($enabled: false) {
@@ -43,7 +52,8 @@
         background-image: radial-gradient(lighten($accent-color, 50%), lighten($accent-color, 20%));
     }
     @else {
-        background-image: radial-gradient(darken(desaturate($accent-color, 80%), 50%), darken($accent-color, 40%));
+        $color: rgba(desaturate($accent-color, 20%), 0.5);
+        background-image: radial-gradient(darken($color, 50%) 35%, rgba(darken($color, 60%), 0.25) 90%, rgba(0,0,0,0) 80%);
     }
 }
 
